@@ -11,7 +11,16 @@
 </br >
 </br > 
 
-We have to install: gcloud, terraform, 
+# Common task: Installing necessary tools.
+
+- [x] Docker
+- [x] gcloud
+- [x] terraform
+- [x] kubectl
+  
+
+
+
 
 
 # 1. Kubernetes Cluster Setup
