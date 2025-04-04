@@ -23,7 +23,7 @@ spec:
         app: webapp
     spec:
       containers:
-      - image: us-central1-docker.pkg.dev/zaurproject/zaurrepo/python-http-app:00001
+      - image: us-central1-docker.pkg.dev/zaurproject/zaurrepo/python-http-app:00004
         imagePullPolicy: Always
         name: webapp
         terminationMessagePath: /dev/termination-log
