@@ -19,7 +19,7 @@
 - [x] kubectl
   
 
-
+bb
 
 
 
