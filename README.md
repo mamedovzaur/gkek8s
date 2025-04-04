@@ -48,20 +48,39 @@ cd webapp
 sudo docker build -t python-http-app .
 sudo docker images # will show us docker images
 ```
-![Alt](images/1.png "docker images")
+![Alt](images/1.png)
 
 - [X] Tagging and Pulling created docker image into google cloud registry:
 ```shell
 docker tag 1b017fb0b721 us-central1-docker.pkg.dev/zaurproject/zaurrepo/python-http-app:00004
 docker push us-central1-docker.pkg.dev/zaurproject/zaurrepo/python-http-app:00004
 ```
-![Alt](images/2.png "docker images")
+![Alt](images/2.png)
 
 
 # 1. Kubernetes Cluster Setup
-I will use terraform to create kubernetes cluster at Google cloud.
+- Login into GCP console using your login and password.
+- Create new project. (we will use it while creating infrastructure).
+- Create artifact registry for docker images.
+- Deploy kubernetes cluster with terraform tool:
+```shell
+cd terraform
+terraform init
+terraform plan
+gcloud auth application-default login #necessary for terraform
+terraform apply
+```
+- Checking newly created cluster in GCP console.
+![Alt](images/3.png)
 
+- Login to created cluster with gcloud tool.
+```shell
 gcloud config set compute/region us-central1
-gcloud container clusters get-credentials zaur-gke-cluster
 gcloud config set compute/zone us-central1-f
 gcloud container clusters get-credentials zaur-gke-cluster
+```
+- Checking cluster with kubectl tool.
+```shell
+kubectl config get-clusters
+```
+![Alt](images/4.png)
