@@ -1,6 +1,4 @@
-# gkek8s
----
-# GKE with ingress, network policy, and autoscaling
+# Creating GKE cluster with ingress, network policy, and autoscaling
 
 # List of works.
 -----
