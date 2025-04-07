@@ -6,8 +6,8 @@
 ## 1. Kubernetes Cluster Setup
 ## 2. Build and Push Web Application 
 ## 3. Deploy Web Application into the kubernetes cluster
-## 4. Autoscaling Based on HTTP Request Rate
-## 5. Network Security 
+## 4. Adding Network policy for the security purposes 
+## 5. Autoscaling Based on HTTP Request Rate
 ## 6. Incident Simulation
 </br >
 </br > 
@@ -157,3 +157,25 @@ kubectl describe deployment webapp -nwebapp
 kubectl get po -nwebapp
 ```
 ![Alt](images/6.png)
+
+- [X] Adding ingress controller and application service
+```shell
+kubectl apply -f webapp-service.yaml
+kubectl apply -f ingress-controller.yaml
+kubectl apply -f ingress.yaml
+```
+![Alt](images/6.png)
+
+
+# 4. Adding Network policy for the security purposes 
+- [X] Deny all traffic between pods in webapp namesapace
+```shell
+cd k8s
+kubectl apply -f NetworkDenyAll.yaml
+```
+
+- [X] Allow only ingress traffic from ingress controller
+```shell
+cd k8s
+kubectl apply -f NetworkAllowFromIngress.yaml
+```
