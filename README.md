@@ -4,10 +4,11 @@
 -----
  
 ## 1. Kubernetes Cluster Setup
-## 2. Deploy Web Application 
-## 3. Autoscaling Based on HTTP Request Rate: 
-## 4. Network Security 
-## 5. Incident Simulation
+## 2. Build and Push Web Application 
+## 3. Deploy Web Application into the kubernetes cluster
+## 4. Autoscaling Based on HTTP Request Rate
+## 5. Network Security 
+## 6. Incident Simulation
 </br >
 </br > 
 
@@ -42,22 +43,6 @@ sudo apt-get update && \
 sudo apt-get install -y kubectl
 ```
 
-- [X] Creating docker image from python code:
-```shell
-cd webapp
-sudo docker build -t python-http-app .
-sudo docker images # will show us docker images
-```
-![Alt](images/1.png)
-
-- [X] Tagging and Pulling created docker image into google cloud registry:
-```shell
-docker tag 1b017fb0b721 us-central1-docker.pkg.dev/zaurproject/zaurrepo/python-http-app:00004
-docker push us-central1-docker.pkg.dev/zaurproject/zaurrepo/python-http-app:00004
-```
-![Alt](images/2.png)
-
-
 # 1. Kubernetes Cluster Setup
 - Login into GCP console using your login and password.
 - Create new project. (we will use it while creating infrastructure).
@@ -75,12 +60,100 @@ terraform apply
 
 - Login to created cluster with gcloud tool.
 ```shell
+
 gcloud config set compute/region us-central1
 gcloud config set compute/zone us-central1-f
 gcloud container clusters get-credentials zaur-gke-cluster
+
 ```
 - Checking cluster with kubectl tool.
 ```shell
+
 kubectl config get-clusters
+
 ```
 ![Alt](images/4.png)
+- You can check list of all available pods by command:
+```shell
+
+kubectl get po -A
+
+```
+
+# 2. Build and Deploy Web Application
+We will use sample web application with three endpoints ( '/', '/health', and '/chaos' )
+```python
+
+@app.route('/', methods=['GET'])
+def index():
+    """Standard application response."""
+    return jsonify({"message": "Hello from world!"})
+
+@app.route('/chaos', methods=['GET'])
+def chaos():
+    """Endpoint to trigger a health-check failure scenario."""
+    global IsChaosEnabled
+    IsChaosEnabled = not IsChaosEnabled  # Toggle the chaos state
+
+    if IsChaosEnabled:
+        return jsonify({"message": "Chaos mode activated!"}), 500  # Simulate failure
+    else:
+        return jsonify({"message": "Chaos mode deactivated!"})
+
+@app.route('/health', methods=['GET'])
+def health():
+    """Health check endpoint. Return 200 if healthy, 500 if chaotic."""
+    if IsChaosEnabled:
+        return jsonify({"status": "unhealthy"}), 500
+    else:
+        return jsonify({"status": "healthy"}), 200
+
+```
+Get whole code in the webapp folder.
+
+- [X] Creating docker image from python code:
+```shell
+cd webapp
+sudo docker build -t python-http-app .
+sudo docker images # will show us docker images
+```
+![Alt](images/1.png)
+
+- [X] Tagging and Pulling created docker image into google cloud registry:
+```shell
+docker tag 1b017fb0b721 us-central1-docker.pkg.dev/zaurproject/zaurrepo/python-http-app:00004
+docker push us-central1-docker.pkg.dev/zaurproject/zaurrepo/python-http-app:00004
+```
+![Alt](images/2.png)
+
+
+## 3. Deploying Web Application into the kubernetes cluster
+
+- [X] Connecting to the cluster
+```shell
+
+gcloud config set compute/region us-central1
+gcloud config set compute/zone us-central1-f
+gcloud container clusters get-credentials zaur-gke-cluster
+
+```
+- [X] Creating new namespace for our application
+```shell
+kubectl create namespace webapp
+```
+
+- [X] Deploying webapp application to the kubernetes
+```shell
+cd k8s
+kubectl apply -f webapp-deployment.yaml
+```
+- [X] Checking newly created deployment
+```shell
+kubectl describe deployment webapp -nwebapp
+```
+![Alt](images/5.png)
+- [X] Checking for running pods
+```shell
+kubectl get po -nwebapp
+```
+![Alt](images/6.png)
