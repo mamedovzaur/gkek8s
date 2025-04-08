@@ -561,7 +561,7 @@ webapp-dfbdc55d4-cvt6s   1/1     Running   5 (1s ago)      39m
 webapp-dfbdc55d4-4vjrw   1/1     Running   3 (1s ago)      6m21s
 webapp-dfbdc55d4-mlbx7   1/1     Running   3 (1s ago)      7m42s
 ```
-See 500 code in Prometheus
+See http "500" code in Prometheus
 ![Alt](images/17.png)
 Looking errors from GCP Log explorer.
 ![Alt](images/18.png) 
